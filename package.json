@@ -1,0 +1,30 @@
+{
+  "name": "nanoleaf-stonks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "run.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node run.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/t0pth4t/nanoleaf-stonks.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/t0pth4t/nanoleaf-stonks/issues"
+  },
+  "homepage": "https://github.com/t0pth4t/nanoleaf-stonks#readme",
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.33",
+    "@types/node-fetch": "^2.5.8",
+    "ts-node": "^9.1.1",
+    "tsc": "^1.20150623.0",
+    "typescript": "^4.2.3"
+  }
+}
