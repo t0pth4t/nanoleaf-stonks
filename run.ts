@@ -96,8 +96,8 @@ const run = async () => {
       }
       //   console.log(JSON.stringify(info));
       //   await togglePower(auth_token, false);
-      console.info("Setting to jack O lantern");
-      await setEffect(auth_token, "Jack O Lantern");
+      //   console.info("Setting to jack O lantern");
+      //   await setEffect(auth_token, "Jack O Lantern");
 
       const response = await getPrice("DOGE");
       console.log(response);
@@ -117,7 +117,7 @@ const run = async () => {
         await setEffect(auth_token, "Reds");
       }
       prevPrice = curPrice;
-      await sleep(30000);
+      await sleep(60000);
     } catch (err) {
       console.error(err);
     }
