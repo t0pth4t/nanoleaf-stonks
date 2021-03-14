@@ -1,6 +1,8 @@
 import * as config from "./config.json";
 import fetch from "node-fetch";
 import { Response } from "node-fetch";
+let prevPrice: number = 0;
+let curPrice: number = 0;
 const getToken = async () => {
   const requestOptions = {
     method: "POST",
@@ -65,14 +67,52 @@ const setEffect = async (auth_token: string, effect: string) => {
   return await response.text();
 };
 
+const getPrice = async (ticker) => {
+  const response = await fetch(
+    `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${ticker}&to_currency=USD&apikey=${config.apiKey}`
+  );
+  if (!response.ok) {
+    throw new Error(`${response.status} ${await response.json()}`);
+  }
+  return await response.json();
+};
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const run = async () => {
-  //   const { auth_token } = await getToken();
-  const auth_token = config.auth_token;
-  //   const info = await getInfo(auth_token);
-  //   console.log(JSON.stringify(info));
-  //   await togglePower(auth_token, false);
-  //   await togglePower(auth_token, true);
-  await setEffect(auth_token, "Green");
+  while (true) {
+    try {
+      //   const { auth_token } = await getToken();
+      const auth_token = config.auth_token;
+      const {
+        state: { on: value },
+      } = await getInfo(auth_token);
+      if (!value) {
+        await togglePower(auth_token, true);
+      }
+      //   console.log(JSON.stringify(info));
+      //   await togglePower(auth_token, false);
+
+      await setEffect(auth_token, "Jack O Lantern");
+
+      const response = await getPrice("DOGE");
+      curPrice = parseFloat(response["5. Exchange Rate"]);
+      if (prevPrice === 0) {
+        prevPrice = curPrice;
+      }
+      if (curPrice > prevPrice) {
+        await setEffect(auth_token, "Green");
+      } else if (curPrice < prevPrice) {
+        await setEffect(auth_token, "Reds");
+      }
+      prevPrice = curPrice;
+      await sleep(30000);
+    } catch (err) {
+      console.error(err);
+    }
+  }
 };
 
 run();
