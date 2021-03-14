@@ -82,32 +82,43 @@ function sleep(ms) {
 }
 
 const run = async () => {
+  const auth_token = config.auth_token;
+  const info = await getInfo(auth_token);
+  console.log(JSON.stringify(info));
+  const {
+    state: {
+      on: { value },
+    },
+  } = info;
+  console.info(`Power is: ${value ? "on" : "off"}`);
+  if (!value) {
+    console.info("Smithers, thank you for turning me on");
+    await togglePower(auth_token, true);
+  }
   while (true) {
     try {
       //   const { auth_token } = await getToken();
-      const auth_token = config.auth_token;
-      const info = await getInfo(auth_token);
-      console.log(JSON.stringify(info));
-      const {
-        state: {
-          on: { value },
-        },
-      } = info;
-      console.info(`Power is: ${value ? "on" : "off"}`);
-      if (!value) {
-        console.info("Smithers, thank you for turning me on");
-        await togglePower(auth_token, true);
-      }
+
       //   console.log(JSON.stringify(info));
       //   await togglePower(auth_token, false);
       //   console.info("Setting to jack O lantern");
       //   await setEffect(auth_token, "Jack O Lantern");
-
-      const response = await getPrice("DOGE");
-      console.log(response);
-      curPrice = parseFloat(
-        response["Realtime Currency Exchange Rate"]["5. Exchange Rate"]
-      );
+      const symbols = ["DOGE", "BTC", "ETH"];
+      const requests = symbols.map((sym) => getPrice(sym));
+      const responses = await Promise.all(requests);
+      //   const response = await getPrice("DOGE");
+      console.log(responses);
+      curPrice = responses
+        .map((r) =>
+          parseFloat(r["Realtime Currency Exchange Rate"]["5. Exchange Rate"])
+        )
+        .reduce((acc, price) => {
+          acc += price;
+          return acc;
+        }, 0);
+      //   curPrice = parseFloat(
+      //     response["Realtime Currency Exchange Rate"]["5. Exchange Rate"]
+      //   );
       console.info(`Most Recent Price Is: ${curPrice}`);
       if (prevPrice === 0) {
         prevPrice = curPrice;
