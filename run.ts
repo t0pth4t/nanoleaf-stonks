@@ -89,22 +89,31 @@ const run = async () => {
       const {
         state: { on: value },
       } = await getInfo(auth_token);
+      console.info(`Power is: ${value ? "on" : "off"}`);
       if (!value) {
+        console.info("Smithers, thank you for turning me on");
         await togglePower(auth_token, true);
       }
       //   console.log(JSON.stringify(info));
       //   await togglePower(auth_token, false);
-
+      console.info("Setting to jack O lantern");
       await setEffect(auth_token, "Jack O Lantern");
 
       const response = await getPrice("DOGE");
-      curPrice = parseFloat(response["5. Exchange Rate"]);
+      console.log(response);
+      curPrice = parseFloat(
+        response["Realtime Currency Exchange Rate"]["5. Exchange Rate"]
+      );
+      console.info(`Most Recent Price Is: ${curPrice}`);
       if (prevPrice === 0) {
         prevPrice = curPrice;
       }
+      console.info(`Previous Price Is: ${prevPrice}`);
       if (curPrice > prevPrice) {
+        console.info("Setting to: Green");
         await setEffect(auth_token, "Green");
       } else if (curPrice < prevPrice) {
+        console.info("Setting to: Red");
         await setEffect(auth_token, "Reds");
       }
       prevPrice = curPrice;
@@ -114,5 +123,5 @@ const run = async () => {
     }
   }
 };
-
+console.info("Started!");
 run();
