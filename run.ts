@@ -88,7 +88,11 @@ const run = async () => {
       const auth_token = config.auth_token;
       const info = await getInfo(auth_token);
       console.log(JSON.stringify(info));
-      const { on: value } = info;
+      const {
+        state: {
+          on: { value },
+        },
+      } = info;
       console.info(`Power is: ${value ? "on" : "off"}`);
       if (!value) {
         console.info("Smithers, thank you for turning me on");
