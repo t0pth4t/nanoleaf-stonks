@@ -124,7 +124,7 @@ const run = async () => {
   } = info;
   console.info(`Power is: ${value ? "on" : "off"}`);
   if (!value) {
-    console.info("Smithers, thank you for turning me on");
+    console.info("Hello Smithers, you're quite good at turning me on");
     await togglePower(auth_token, true);
   }
   while (true) {
